@@ -16,9 +16,9 @@ Guia para instalar e testar o serviço. Se algo falhar, veja a seção **Problem
 
 ## 2. Clonar
 
-```
-git clone <LINK-DO-REPO>
-cd <PASTA-DO-REPO>
+```bash
+git clone https://github.com/4ndrewss/recomendador-bentoml-CRUDE.git # link do repo
+cd recomendador-bentoml-CRUDE # pasta do repo
 ```
 
 ## 3. Treinar e subir
