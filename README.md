@@ -1,5 +1,5 @@
 # Recomendador no BentoML
-> **Primeiro, leia o [setup.md](setup.md)** para instalar e testar o projeto.
+> **Primeiro, leia o [SETUP.md](SETUP.md)** para instalar e testar o projeto.
 
 Imagine uma feira de artesanato na internet. Tem jarro de barro, renda, xilogravura,
 cesto de palha. A pessoa abre a página de um jarro de Tracunhaém. Embaixo da foto,
