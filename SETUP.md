@@ -1,4 +1,4 @@
-# Setup (Windows / PowerShell)
+# 🖥️ Setup (Windows / PowerShell)
 
 Guia para instalar e testar o serviço. Se algo falhar, veja a seção **Problemas comuns**.
 
@@ -51,7 +51,7 @@ Se retornar `items` com sugestões, o setup está ok.
 
 > Mudou o `dados/catalogo.json`? Rode o treino de novo e reinicie o serve.
 
-## Problemas comuns
+## 💥 Problemas comuns
 
 **`just` / `uv` "não é reconhecido como cmdlet"**
 O terminal não enxerga o programa (PATH). Feche e abra o terminal. Se persistir:
