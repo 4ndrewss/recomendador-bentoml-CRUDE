@@ -1,28 +1,26 @@
 {
   "produtos": [
-    {"id": "p01", "nome": "Jarro barro Tracunhaém", "tecnica": "ceramica", "regiao": "Tracunhaém", "pedidos": 42},
-    {"id": "p02", "nome": "Prato esmaltado Tracunhaém", "tecnica": "ceramica", "regiao": "Tracunhaém", "pedidos": 28},
-    {"id": "p03", "nome": "Boneca de barro", "tecnica": "ceramica", "regiao": "Tracunhaém", "pedidos": 19},
-    {"id": "p04", "nome": "Rendeira Alto do Moura", "tecnica": "renda", "regiao": "Alto do Moura", "pedidos": 35},
-    {"id": "p05", "nome": "Toalha de renda", "tecnica": "renda", "regiao": "Alto do Moura", "pedidos": 22},
-    {"id": "p06", "nome": "Caminho de mesa renda", "tecnica": "renda", "regiao": "Alto do Moura", "pedidos": 11},
-    {"id": "p07", "nome": "Xilogravura Pilar", "tecnica": "xilogravura", "regiao": "Comunidade do Pilar", "pedidos": 31},
-    {"id": "p08", "nome": "Cordel ilustrado", "tecnica": "xilogravura", "regiao": "Comunidade do Pilar", "pedidos": 17},
-    {"id": "p09", "nome": "Quadro xilo colorido", "tecnica": "xilogravura", "regiao": "Comunidade do Pilar", "pedidos": 9},
-    {"id": "p10", "nome": "Cesto de palha", "tecnica": "cestaria", "regiao": "Comunidade do Pilar", "pedidos": 24},
-    {"id": "p11", "nome": "Bolsa de palha", "tecnica": "cestaria", "regiao": "Comunidade do Pilar", "pedidos": 14},
-    {"id": "p12", "nome": "Sousplat de palha", "tecnica": "cestaria", "regiao": "Alto do Moura", "pedidos": 8}
+    {"id": "p01", "nome": "Jarro de barro Tracunhaém", "tecnica": "ceramica", "regiao": "Tracunhaém", "pedidos": 42, "estoque": 5, "artesao_id": "a01", "nome_artesao": "Maria das Dores"},
+    {"id": "p02", "nome": "Prato de barro esmaltado", "tecnica": "ceramica", "regiao": "Tracunhaém", "pedidos": 28, "estoque": 0, "artesao_id": "a01", "nome_artesao": "Maria das Dores"},
+    {"id": "p03", "nome": "Boneca de barro", "tecnica": "ceramica", "regiao": "Tracunhaém", "pedidos": 19, "estoque": 8, "artesao_id": "a02", "nome_artesao": "José Ferreira"},
+    {"id": "p04", "nome": "Moringa de barro", "tecnica": "ceramica", "regiao": "Tracunhaém", "pedidos": 15, "estoque": 3, "artesao_id": "a02", "nome_artesao": "José Ferreira"},
+    {"id": "p05", "nome": "Toalha de renda renascença", "tecnica": "renda", "regiao": "Pesqueira", "pedidos": 35, "estoque": 6, "artesao_id": "a03", "nome_artesao": "Ana Lúcia Barros"},
+    {"id": "p06", "nome": "Caminho de mesa de renda", "tecnica": "renda", "regiao": "Pesqueira", "pedidos": 22, "estoque": 4, "artesao_id": "a03", "nome_artesao": "Ana Lúcia Barros"},
+    {"id": "p07", "nome": "Cesto de palha trançada", "tecnica": "cestaria", "regiao": "Agreste Pernambucano", "pedidos": 24, "estoque": 10, "artesao_id": "a04", "nome_artesao": "Francisca Nunes"},
+    {"id": "p08", "nome": "Bolsa de palha", "tecnica": "cestaria", "regiao": "Agreste Pernambucano", "pedidos": 14, "estoque": 7, "artesao_id": "a04", "nome_artesao": "Francisca Nunes"},
+    {"id": "p09", "nome": "Sousplat de palha", "tecnica": "cestaria", "regiao": "Agreste Pernambucano", "pedidos": 8, "estoque": 12, "artesao_id": "a05", "nome_artesao": "Severino Lima"},
+    {"id": "p10", "nome": "Xilogravura de cordel", "tecnica": "xilogravura", "regiao": "Bezerros", "pedidos": 31, "estoque": 9, "artesao_id": "a06", "nome_artesao": "Antônio Cavalcanti"},
+    {"id": "p11", "nome": "Quadro de xilogravura colorida", "tecnica": "xilogravura", "regiao": "Bezerros", "pedidos": 17, "estoque": 2, "artesao_id": "a06", "nome_artesao": "Antônio Cavalcanti"},
+    {"id": "p12", "nome": "Escultura em madeira", "tecnica": "madeira", "regiao": "Bezerros", "pedidos": 12, "estoque": 4, "artesao_id": "a07", "nome_artesao": "Raimundo Silva"}
   ],
   "cestas": [
-    ["p01", "p02", "p03"],
+    ["p01", "p03", "p04"],
     ["p01", "p02"],
-    ["p04", "p05", "p06"],
-    ["p04", "p05"],
-    ["p07", "p08"],
+    ["p05", "p06"],
     ["p07", "p08", "p09"],
     ["p10", "p11"],
-    ["p01", "p10"],
-    ["p04", "p07"],
-    ["p02", "p03", "p01"]
+    ["p01", "p07"],
+    ["p05", "p10"],
+    ["p03", "p04", "p12"]
   ]
 }
