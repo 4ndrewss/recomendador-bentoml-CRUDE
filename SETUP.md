@@ -2,13 +2,7 @@
 
 Guia para instalar e testar o serviço. Se algo falhar, veja a seção **Problemas comuns**.
 
-| Passo | Etapa | Terminal |
-| --- | --- | --- |
-| 1 | Instalar (`winget`) e corrigir PATH | PowerShell |
-| 2 e 3 | Clonar, treinar e subir | PowerShell ou Git Bash |
-| 4 | Testar | PowerShell (`Invoke-RestMethod`) ou Git Bash (`curl`) |
-
-> **Não use o CMD**: os comandos deste guia não foram feitos pra ele.
+Use o **PowerShell** pra instalar (passo 1). Nos passos 2 a 4, serve **PowerShell ou Git Bash**. **Não use o CMD**: os comandos deste guia não foram feitos pra ele.
 
 ## 1. Pré-requisitos
 
@@ -31,18 +25,18 @@ cd recomendador-bentoml-CRUDE # pasta do repo
 
 ## 3. Treinar e subir
 
-> Rode o `treino` **primeiro** (e de novo se mudar o `catalogo.json`). Só depois o `serve`.
-
+1. Treine o modelo (rode de novo sempre que mudar o `catalogo.json`):
 ```
-uv run python treino.py
-uv run bentoml serve service:Recomendador
+   uv run python treino.py
+```
+2. Suba o serviço:
+```
+   uv run bentoml serve service:Recomendador
 ```
 
-> Se você tem o `just`, `just treino` e `just serve` fazem o mesmo.
+O serviço fica em http://127.0.0.1:3000 (Swagger na mesma URL). O terminal fica ocupado até você apertar `Ctrl+C`, e isso é normal: abra **outro terminal** pra testar.
 
-O serve **não termina sozinho**: o terminal fica ocupado até você apertar `Ctrl+C`. Isso é normal, abra **outro terminal** pra testar. O serviço fica em http://127.0.0.1:3000 (Swagger na mesma URL).
-
-> Na primeira execução o `uv` baixa Python e dependências. Pode demorar.
+Na primeira execução o `uv` baixa Python e dependências, então pode demorar. Se você tem o `just`, `just treino` e `just serve` fazem o mesmo.
 
 ## 4. Testar (em outro terminal)
 
@@ -62,7 +56,7 @@ Se retornar `status: "sucesso"` com `p03` e `p04` em `recomendacoes`, o setup es
 
 ## 💥 Problemas comuns
 
-**`just` / `uv` "não é reconhecido como cmdlet" (PowerShell)**
+**`just` / `uv` "não é reconhecido como cmdlet" (PowerShell)**- 
 O terminal não enxerga o programa (PATH). Feche e abra o terminal. Se persistir:
 
 ```
@@ -76,14 +70,14 @@ Adicione a pasta encontrada ao PATH da sessão:
 $env:Path += ";<PASTA-ONDE-ESTÁ-O-EXE>"
 ```
 
-**`just.exe` bloqueado: "Uma política de Controle de Aplicativo bloqueou este arquivo"**
+**`just.exe` bloqueado: "Uma política de Controle de Aplicativo bloqueou este arquivo"**- 
 Comum em PCs de faculdade/trabalho. Não tente burlar a política. Use os comandos `uv run ...` do passo 3 (o `just` é só atalho).
 
-**Windows avisa "comando potencialmente perigoso" ao instalar o uv**
+**Windows avisa "comando potencialmente perigoso" ao instalar o uv**- 
 O instalador `irm ... | iex` dispara esse alerta. Use `winget install --id astral-sh.uv -e`.
 
-**`curl` dá "Invalid JSON (PowerShell): key must be a string"**
+**`curl` dá "Invalid JSON (PowerShell): key must be a string"**- 
 O PowerShell estraga as aspas do `curl.exe -d`. Use `Invoke-RestMethod` (passo 4) ou o Swagger em http://127.0.0.1:3000.
 
-**Porta 3000 ocupada**
+**Porta 3000 ocupada**- 
 Feche outro `serve` ou container rodando e tente de novo.
