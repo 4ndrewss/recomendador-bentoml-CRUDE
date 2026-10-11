@@ -1,6 +1,14 @@
-# 🖥️ Setup (Windows / PowerShell)
+# 🖥️ Setup (Windows: PowerShell ou Git Bash)
 
 Guia para instalar e testar o serviço. Se algo falhar, veja a seção **Problemas comuns**.
+
+| Passo | Etapa | Terminal |
+| --- | --- | --- |
+| 1 | Instalar (`winget`) e corrigir PATH | PowerShell |
+| 2 e 3 | Clonar, treinar e subir | PowerShell ou Git Bash |
+| 4 | Testar | PowerShell (`Invoke-RestMethod`) ou Git Bash (`curl`) |
+
+> **Não use o CMD**: os comandos deste guia não foram feitos pra ele.
 
 ## 1. Pré-requisitos
 
@@ -9,10 +17,10 @@ Guia para instalar e testar o serviço. Se algo falhar, veja a seção **Problem
 | Git | clonar o repo | https://git-scm.com |
 | uv | gerencia Python e dependências | `winget install --id astral-sh.uv -e` |
 | just *(opcional)* | atalhos de comando | `winget install --id Casey.Just --exact` |
+| Python 3.13 | roda o projeto | instalado automaticamente pelo uv (não precisa instalar) |
 
-- O Python 3.13 **não precisa** estar instalado: o `uv` baixa sozinho.
 - Depois de instalar, **feche e abra o terminal** (se for VS Code, feche o VS Code inteiro).
-- Confira: `uv --version` e `just --version`.
+- Confira: `uv --version` (e `just --version`, se instalou)
 
 ## 2. Clonar
 
@@ -23,37 +31,38 @@ cd recomendador-bentoml-CRUDE # pasta do repo
 
 ## 3. Treinar e subir
 
-Com `just`:
-
-```
-just treino
-just serve
-```
-
-Sem `just` (equivalente, funciona em qualquer máquina):
+> Rode o `treino` **primeiro** (e de novo se mudar o `catalogo.json`). Só depois o `serve`.
 
 ```
 uv run python treino.py
 uv run bentoml serve service:Recomendador
 ```
 
-Deixe o terminal do `serve` aberto. O serviço fica em http://127.0.0.1:3000 (Swagger na mesma URL).
+> Se você tem o `just`, `just treino` e `just serve` fazem o mesmo.
+
+O serve **não termina sozinho**: o terminal fica ocupado até você apertar `Ctrl+C`. Isso é normal, abra **outro terminal** pra testar. O serviço fica em http://127.0.0.1:3000 (Swagger na mesma URL).
 
 > Na primeira execução o `uv` baixa Python e dependências. Pode demorar.
 
 ## 4. Testar (em outro terminal)
 
-```
-Invoke-RestMethod -Uri http://127.0.0.1:3000/recomendar -Method Post -ContentType "application/json" -Body '{"produto_na_pagina":"p01","limite":4,"excluir":[]}' | ConvertTo-Json -Depth 5
+PowerShell:
+
+```powershell
+Invoke-RestMethod -Uri http://127.0.0.1:3000/api/v1/recomendacoes -Method Post -ContentType "application/json" -Body '{"produto_id":"p01","limite":3}' | ConvertTo-Json -Depth 5
 ```
 
-Se retornar `items` com sugestões, o setup está ok.
+Git Bash:
 
-> Mudou o `dados/catalogo.json`? Rode o treino de novo e reinicie o serve.
+```bash
+curl -X POST http://127.0.0.1:3000/api/v1/recomendacoes -H "Content-Type: application/json" -d '{"produto_id":"p01","limite":3}'
+```
+
+Se retornar `status: "sucesso"` com `p03` e `p04` em `recomendacoes`, o setup está ok.
 
 ## 💥 Problemas comuns
 
-**`just` / `uv` "não é reconhecido como cmdlet"**
+**`just` / `uv` "não é reconhecido como cmdlet" (PowerShell)**
 O terminal não enxerga o programa (PATH). Feche e abra o terminal. Se persistir:
 
 ```
@@ -73,11 +82,8 @@ Comum em PCs de faculdade/trabalho. Não tente burlar a política. Use os comand
 **Windows avisa "comando potencialmente perigoso" ao instalar o uv**
 O instalador `irm ... | iex` dispara esse alerta. Use `winget install --id astral-sh.uv -e`.
 
-**`curl` dá "Invalid JSON: key must be a string"**
+**`curl` dá "Invalid JSON (PowerShell): key must be a string"**
 O PowerShell estraga as aspas do `curl.exe -d`. Use `Invoke-RestMethod` (passo 4) ou o Swagger em http://127.0.0.1:3000.
-
-**`p01` aparece na resposta, mas não nos `items`**
-Normal: é o eco em `produto_na_pagina`. O produto da página nunca entra nas sugestões.
 
 **Porta 3000 ocupada**
 Feche outro `serve` ou container rodando e tente de novo.

@@ -123,19 +123,19 @@ Invoke-RestMethod -Uri "http://127.0.0.1:3000/api/v1/recomendacoes" `
       "regiao": "Tracunhaém",
       "artesao_id": "a02",
       "nome_artesao": "José Ferreira",
-      "score_relevancia":  0.775,
+      "score_relevancia": 0.775,
       "motivo": "mesma_tecnica"
     }
   ]
 }
 ```
-> Apesar de limite: 3, vieram apenas 2 itens: o p02 (mesma técnica) está sem estoque e é omitido pelo RF-05.
+> Apesar de `limite: 3`, vieram apenas 2 itens: o `p02` (mesma técnica) está sem estoque e é omitido pelo RF-05.
 
 ---
 
 ## 🎛️ Casos de teste
 
-Com o serviço rodando (`uv run bentoml serve service:Recomendador`), execute em **outro terminal**. Os exemplos usam PowerShell; no Linux/Mac, use o `curl` equivalente do exemplo de uso acima.
+Com o serviço rodando (`uv run bentoml serve service:Recomendador`), execute em **outro terminal**. Os exemplos usam PowerShell; no Git Bash, Linux ou Mac, use o `curl` do exemplo de uso.
 
 ### Teste 1 — RF-01: mesma técnica
 
