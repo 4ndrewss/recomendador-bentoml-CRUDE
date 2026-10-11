@@ -114,7 +114,7 @@ Invoke-RestMethod -Uri "http://127.0.0.1:3000/api/v1/recomendacoes" `
       "regiao": "Tracunhaém",
       "artesao_id": "a02",
       "nome_artesao": "José Ferreira",
-      "score_relevancia": 0.6548,
+      "score_relevancia": 0.8083,
       "motivo": "mesma_tecnica"
     },
     {
@@ -124,12 +124,13 @@ Invoke-RestMethod -Uri "http://127.0.0.1:3000/api/v1/recomendacoes" `
       "regiao": "Tracunhaém",
       "artesao_id": "a02",
       "nome_artesao": "José Ferreira",
-      "score_relevancia": 0.5893,
+      "score_relevancia":  0.775,
       "motivo": "mesma_tecnica"
     }
   ]
 }
 ```
+> Apesar de limite: 3, vieram apenas 2 itens: o p02 (mesma técnica) está sem estoque e é omitido pelo RF-05.
 
 ---
 
