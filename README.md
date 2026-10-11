@@ -1,12 +1,11 @@
-> **Primeiro, leia o [SETUP.md](SETUP.md)** para instalar e testar o projeto.
-
 # Projeto Origem — Módulo de Recomendação
+> **Primeiro, leia o [SETUP.md](SETUP.md)** para instalar e testar o projeto.
 
 ## Identificação
 
 - **Projeto:** Origem
 - **Grupo:** CRUDE
-- **Turma:** Análise e Desenvolvimento de Sistemas (ADS) - CESAR School
+- **Turma:** ADS Regular (Turma A) — CESAR School
 - **Membros:**
   - Andrews Queiroz
   - Arthur Marques
@@ -136,7 +135,41 @@ Invoke-RestMethod -Uri "http://127.0.0.1:3000/api/v1/recomendacoes" `
 
 ## Casos de teste
 
-(a preencher)
+Com o serviço rodando (`uv run bentoml serve service:Recomendador`), execute em **outro terminal**. Os exemplos usam PowerShell; no Linux/Mac, use o `curl` equivalente do exemplo de uso acima.
+
+### Teste 1 — RF-01: mesma técnica
+
+```powershell
+Invoke-RestMethod -Uri "http://127.0.0.1:3000/api/v1/recomendacoes" -Method Post -ContentType "application/json" -Body '{"produto_id": "p07"}' | ConvertTo-Json -Depth 5
+```
+
+**Esperado:** `status: "sucesso"` e 2 itens, ambos com `motivo: "mesma_tecnica"`:
+
+| produto_id | score_relevancia |
+| :--- | :--- |
+| p08 | 0.7667 |
+| p09 | 0.7167 |
+
+### Teste 2 — RF-02: mesma região
+
+```powershell
+Invoke-RestMethod -Uri "http://127.0.0.1:3000/api/v1/recomendacoes" -Method Post -ContentType "application/json" -Body '{"produto_id": "p12"}' | ConvertTo-Json -Depth 5
+```
+
+**Esperado:** `status: "sucesso"` e 2 itens, ambos com `motivo: "mesma_regiao"` (o `p12` é o único de "madeira", então não há itens de mesma técnica):
+
+| produto_id | score_relevancia |
+| :--- | :--- |
+| p10 | 0.2583 |
+| p11 | 0.1417 |
+
+### Teste 3 — RF-05: produto sem estoque não aparece
+
+```powershell
+Invoke-RestMethod -Uri "http://127.0.0.1:3000/api/v1/recomendacoes" -Method Post -ContentType "application/json" -Body '{"produto_id": "p01"}' | ConvertTo-Json -Depth 5
+```
+
+**Esperado:** `status: "sucesso"` e 2 itens com `motivo: "mesma_tecnica"`: `p03` (0.8083) e `p04` (0.775). O `p02` é da mesma técnica, mas está com estoque 0, então **não** aparece.
 
 ---
 
