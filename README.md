@@ -1,7 +1,7 @@
-# Projeto Origem — Módulo de Recomendação
+# 🏺 Projeto Origem — Módulo de Recomendação
 > **Primeiro, leia o [SETUP.md](SETUP.md)** para instalar e testar o projeto.
 
-## Identificação
+## 🪪 Identificação
 
 - **Projeto:** Origem
 - **Grupo:** CRUDE
@@ -16,7 +16,7 @@
 
 ---
 
-## O que é
+## 🔎 O que é
 
 Mockup do módulo de recomendação do projeto **Origem**, desenvolvido com BentoML e estruturado a partir dos requisitos da **AV1**. 
 
@@ -24,7 +24,7 @@ O serviço atua como um sistema de ranqueamento que sugere itens artesanais simi
 
 ---
 
-## Como instalar e subir
+## ⚙️ Como instalar e subir
 
 Para instruções detalhadas de ambiente, pré-requisitos e resolução de problemas, consulte o **[SETUP.md](SETUP.md)**.
 
@@ -39,7 +39,7 @@ O serviço fica em `http://127.0.0.1:3000` (Swagger interativo disponível na me
 
 ---
 
-## Mapeamento de Requisitos Funcionais (AV1)
+## 🔄️ Mapeamento de Requisitos Funcionais (AV1)
 
 | RF | Descrição | Endpoint | Status |
 | :--- | :--- | :--- | :--- |
@@ -53,7 +53,7 @@ O serviço fica em `http://127.0.0.1:3000` (Swagger interativo disponível na me
 
 ---
 
-## Entrada e Saída
+## 📥 Entrada e Saída
 
 ### Contrato do Endpoint (`POST /api/v1/recomendacoes`)
 
@@ -133,7 +133,7 @@ Invoke-RestMethod -Uri "http://127.0.0.1:3000/api/v1/recomendacoes" `
 
 ---
 
-## Casos de teste
+## 🎛️ Casos de teste
 
 Com o serviço rodando (`uv run bentoml serve service:Recomendador`), execute em **outro terminal**. Os exemplos usam PowerShell; no Linux/Mac, use o `curl` equivalente do exemplo de uso acima.
 
