@@ -10,6 +10,14 @@
 # Imagem de aula (tag estável): recomendador:aula
 # Pare qualquer `just serve` na :3000 antes de `just serve-container`.
 
+# No Windows o just usa PowerShell (o padrão dele é `sh`, que costuma não estar
+# no PATH). Vale também para quem roda `just` dentro do Git Bash.
+set windows-shell := ["powershell.exe", "-NoLogo", "-NoProfile", "-Command"]
+
+# `just` sem argumentos lista as receitas (sem isso, rodaria `treino`).
+default:
+    @just --list
+
 # ---------------------------------------------------------------------------
 # Offline — treino
 # ---------------------------------------------------------------------------
@@ -61,24 +69,46 @@ listar-imagens:
 
 # ---------------------------------------------------------------------------
 # Exemplos HTTP (serve local OU serve-container na :3000)
+# Contrato: POST /api/v1/recomendacoes  { produto_id, limite }
+# No Windows usa Invoke-RestMethod: `curl` no PowerShell é outro comando e
+# estraga as aspas do JSON.
 # ---------------------------------------------------------------------------
 
+[windows]
 curl-exemplo:
-    # Cliente abriu o jarro de barro (p01)
-    curl -sS -X POST http://127.0.0.1:3000/recomendar \
-      -H 'Content-Type: application/json' \
-      -d '{"produto_na_pagina":"p01","limite":4,"excluir":[]}' | python3 -m json.tool
+    # Cliente abriu o jarro de barro (p01) → esperado: p03 e p04 nas recomendações
+    Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:3000/api/v1/recomendacoes' -ContentType 'application/json' -Body (@{ produto_id = 'p01'; limite = 3 } | ConvertTo-Json) | ConvertTo-Json -Depth 5
 
+[unix]
+curl-exemplo:
+    # Cliente abriu o jarro de barro (p01) → esperado: p03 e p04 nas recomendações
+    curl -sS -X POST http://127.0.0.1:3000/api/v1/recomendacoes \
+      -H 'Content-Type: application/json' \
+      -d '{"produto_id":"p01","limite":3}' | python3 -m json.tool
+
+[windows]
 curl-complemento:
-    # Poucos da mesma técnica → completa com os mais pedidos
-    curl -sS -X POST http://127.0.0.1:3000/recomendar \
-      -H 'Content-Type: application/json' \
-      -d '{"produto_na_pagina":"p12","limite":4,"excluir":["p10","p11"]}' | python3 -m json.tool
+    # p12 (madeira) não tem outro da mesma técnica → completa com a mesma região (Bezerros): p10 e p11
+    Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:3000/api/v1/recomendacoes' -ContentType 'application/json' -Body (@{ produto_id = 'p12'; limite = 4 } | ConvertTo-Json) | ConvertTo-Json -Depth 5
 
-curl-inexistente:
-    curl -sS -X POST http://127.0.0.1:3000/recomendar \
+[unix]
+curl-complemento:
+    # p12 (madeira) não tem outro da mesma técnica → completa com a mesma região (Bezerros): p10 e p11
+    curl -sS -X POST http://127.0.0.1:3000/api/v1/recomendacoes \
       -H 'Content-Type: application/json' \
-      -d '{"produto_na_pagina":"nao-existe","limite":4}' | python3 -m json.tool
+      -d '{"produto_id":"p12","limite":4}' | python3 -m json.tool
+
+[windows]
+curl-inexistente:
+    # Produto que não existe → esperado: HTTP 404
+    try { Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:3000/api/v1/recomendacoes' -ContentType 'application/json' -Body (@{ produto_id = 'nao-existe'; limite = 3 } | ConvertTo-Json) } catch { Write-Output ('HTTP ' + [int]$_.Exception.Response.StatusCode) }
+
+[unix]
+curl-inexistente:
+    # Produto que não existe → esperado: HTTP 404
+    curl -sS -i -X POST http://127.0.0.1:3000/api/v1/recomendacoes \
+      -H 'Content-Type: application/json' \
+      -d '{"produto_id":"nao-existe","limite":3}'
 
 # ---------------------------------------------------------------------------
 # Material de aula
