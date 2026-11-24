@@ -65,7 +65,7 @@ O serviço fica em `http://127.0.0.1:3000` (Swagger interativo disponível na me
 
 #### Campos de Saída (JSON Response)
 
-- `status` *(string)*: Estado da resposta (`"sucesso"` ou `"erro"`).
+- `status` *(string)*: Estado da resposta (`"sucesso"` ou `"erro"`)
 - `recomendacoes` *(array de objetos)*: Lista ordenada dos produtos recomendados, contendo:
   - `produto_id` *(string)*: Identificador do produto recomendado.
   - `nome` *(string)*: Nome da peça artesanal.
