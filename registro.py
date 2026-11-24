@@ -22,6 +22,12 @@ def _contar(resultado) -> int:
         return len(resultado)
     return 1  # um único produto (dict)
 
+def _ids(resultado) -> list[str]:
+    if resultado is None:
+        return []
+    itens = resultado if isinstance(resultado, (list, tuple, set)) else [resultado]
+    return [i["id"] for i in itens if isinstance(i, dict) and "id" in i]
+
 
 def registrar(produto_existe=None):
     """Decorador que anota cada chamada em log_dados.jsonl.
@@ -46,6 +52,7 @@ def registrar(produto_existe=None):
                 "chamador": chamador,
                 "identificadores": [produto_id],  # só o id, nunca o produto inteiro
                 "quantidade": 0,
+                "retornados": [],
                 "sucesso": True,
                 "erro": None,
             }
@@ -53,6 +60,7 @@ def registrar(produto_existe=None):
             try:
                 resultado = func(*args, **kwargs)
                 linha["quantidade"] = _contar(resultado)
+                linha["retornados"] = _ids(resultado)
 
                 nao_achou = resultado is None or (
                     produto_existe is not None
