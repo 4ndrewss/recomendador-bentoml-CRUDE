@@ -12,22 +12,30 @@ def carregar_catalogo() -> dict:
     return json.loads(DADOS.read_text(encoding="utf-8"))
 
 
-def buscar_produto(produto_id: str, produtos: dict[str, dict]) -> dict | None:
+def _produtos_por_id() -> dict[str, dict]:
+    """Lê o catálogo e devolve os produtos indexados pelo id."""
+    return {p["id"]: p for p in carregar_catalogo()["produtos"]}
+
+
+def buscar_produto(produto_id: str) -> dict | None:
     """Busca o produto pelo ID ou retorna None quando ele não existe."""
-    return produtos.get(produto_id)
+    return _produtos_por_id().get(produto_id)
 
 
 def listar_produtos_parecidos(
-    produto: dict,
-    produtos: dict[str, dict],
+    produto_id: str,
     *,
     incluir_mesma_regiao: bool = False,
 ) -> list[dict]:
     """Lista outros produtos em estoque da mesma técnica, a categoria do catálogo.
 
     Se solicitado, também inclui produtos da mesma região. Retorna uma lista
-    vazia quando não há candidatos.
+    vazia quando o produto não existe ou não há candidatos.
     """
+    produtos = _produtos_por_id()
+    produto = produtos.get(produto_id)
+    if produto is None:
+        return []
     return [
         candidato
         for candidato in produtos.values()
