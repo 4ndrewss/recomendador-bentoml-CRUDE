@@ -3,6 +3,8 @@
 import json
 from pathlib import Path
 
+from registro import registrar
+
 
 DADOS = Path(__file__).resolve().parent / "dados" / "catalogo.json"
 
@@ -17,15 +19,22 @@ def _produtos_por_id() -> dict[str, dict]:
     return {p["id"]: p for p in carregar_catalogo()["produtos"]}
 
 
-def buscar_produto(produto_id: str) -> dict | None:
+def _produto_existe(produto_id: str) -> bool:
+    return produto_id in _produtos_por_id()
+
+
+@registrar()
+def buscar_produto(produto_id: str, *, chamador: str | None = None) -> dict | None:
     """Busca o produto pelo ID ou retorna None quando ele não existe."""
     return _produtos_por_id().get(produto_id)
 
 
+@registrar(produto_existe=_produto_existe)
 def listar_produtos_parecidos(
     produto_id: str,
     *,
     incluir_mesma_regiao: bool = False,
+    chamador: str | None = None,
 ) -> list[dict]:
     """Lista outros produtos em estoque da mesma técnica, a categoria do catálogo.
 

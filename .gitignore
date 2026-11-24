@@ -5,3 +5,4 @@ __pycache__/
 .bentoml/
 *.egg-info/
 *.~lock.*
+log_dados.jsonl
