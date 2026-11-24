@@ -7,6 +7,8 @@ from pathlib import Path
 
 import bentoml
 
+from acesso_dados import buscar_produto, listar_produtos_parecidos
+
 modelo = bentoml.models.get("recomendador:latest")
 ARTEFATO = "model.pkl"
 LIMITE_MAXIMO = 5
@@ -50,8 +52,8 @@ class Recomendador:
                 "recomendacoes": [],
             }
 
-        produtos = self.artefato["produtos"]
-        if produto_id not in produtos:
+        atual = buscar_produto(produto_id)
+        if atual is None:
             ctx.response.status_code = 404
             return {
                 "status": "erro",
@@ -59,32 +61,27 @@ class Recomendador:
                 "recomendacoes": [],
             }
 
-        atual = produtos[produto_id]
         pop = self.artefato["pop"]
         pedidos_brutos = self.artefato["pedidos_brutos"]
         cooc_pagina = self.artefato["cooc"].get(produto_id, {})
 
         candidatos = []
-        for pid, p in produtos.items():
-            if pid == produto_id or p.get("estoque", 0) <= 0:
-                continue
+        for p in listar_produtos_parecidos(produto_id, incluir_mesma_regiao=True):
+            pid = p["id"]
             if p["tecnica"] == atual["tecnica"]:
                 motivo = "mesma_tecnica"
-            elif p["regiao"] == atual["regiao"]:
-                motivo = "mesma_regiao"
             else:
-                continue
+                motivo = "mesma_regiao"
             base = 0.7 * pop[pid] + 0.3 * cooc_pagina.get(pid, 0.0)
             # Faixas separadas: técnica fica em 0.5–1.0 e região em 0.0–0.5,
             # então quem tem a mesma técnica aparece antes.
             score = 0.5 + 0.5 * base if motivo == "mesma_tecnica" else 0.5 * base
-            candidatos.append((score, pid, motivo))
+            candidatos.append((score, pid, motivo, p))
 
         candidatos.sort(key=lambda c: (c[0], pedidos_brutos[c[1]]), reverse=True)
 
         recomendacoes = []
-        for score, pid, motivo in candidatos[:limite]:
-            p = produtos[pid]
+        for score, pid, motivo, p in candidatos[:limite]:
             recomendacoes.append(
                 {
                     "produto_id": pid,

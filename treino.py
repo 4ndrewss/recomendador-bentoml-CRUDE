@@ -2,14 +2,14 @@
 
 from __future__ import annotations
 
-import json
 import pickle
 from collections import defaultdict
 from pathlib import Path
 
 import bentoml
 
-DADOS = Path(__file__).resolve().parent / "dados" / "catalogo.json"
+from acesso_dados import carregar_catalogo
+
 ARTEFATO = "model.pkl"
 
 
@@ -30,10 +30,10 @@ def _cooc(cestas: list[list[str]]) -> dict[str, dict[str, float]]:
 
 
 def main() -> None:
-    catalogo = json.loads(DADOS.read_text(encoding="utf-8"))
+    catalogo = carregar_catalogo()
     produtos = {p["id"]: p for p in catalogo["produtos"]}
     pedidos_brutos = {pid: float(p["pedidos"]) for pid, p in produtos.items()}
-    max_pedidos = max(pedidos_brutos.values()) or 1.0
+    max_pedidos = max(pedidos_brutos.values(), default=1.0) or 1.0
     pop = {pid: n / max_pedidos for pid, n in pedidos_brutos.items()}
     cooc = _cooc(catalogo["cestas"])
 
