@@ -21,3 +21,12 @@ Número inteiro com a quantidade de pedidos já recebidos pelo produto (varia de
 
 ### `cestas`
 Lista de compras, em que cada compra é uma lista com os `id` dos produtos comprados juntos (por exemplo, `["p01", "p02"]`). Cada cesta tem de 2 a 3 itens e serve para descobrir quais produtos costumam ser comprados em conjunto.
+
+### `estoque`
+Quantidade de unidades disponíveis do produto. Quando é 0, o produto não é recomendado.
+
+### `artesao_id`
+Identificador do artesão que produz o produto (ex.: `a02`). Permite ligar vários produtos ao mesmo artesão.
+
+### `nome_artesao`
+Nome do artesão que aparece na recomendação. São nomes inventados, não correspondem a pessoas reais.
