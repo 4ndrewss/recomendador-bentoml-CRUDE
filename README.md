@@ -1,4 +1,6 @@
 # 🏺 Projeto Origem — Módulo de Recomendação
+> 📌 **Projeto final do grupo CRUDE: veja o [README_PROJETO_FINAL.md](README_PROJETO_FINAL.md).**
+>
 > **Primeiro, leia o [SETUP.md](SETUP.md)** para instalar e testar o projeto.
 
 ## 🪪 Identificação
