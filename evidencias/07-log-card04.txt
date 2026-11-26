@@ -1,0 +1,7 @@
+﻿{"data_hora": "2026-11-26T00:10:35", "funcao": "buscar_produto", "chamador": "rota", "identificadores": ["p01"], "quantidade": 1, "retornados": ["p01"], "sucesso": true, "erro": null}
+{"data_hora": "2026-11-26T00:10:35", "funcao": "listar_produtos_parecidos", "chamador": "rota", "identificadores": ["p01"], "quantidade": 2, "retornados": ["p03", "p04"], "sucesso": true, "erro": null}
+{"data_hora": "2026-11-26T00:10:36", "funcao": "buscar_produto", "chamador": "rota", "identificadores": ["p12"], "quantidade": 1, "retornados": ["p12"], "sucesso": true, "erro": null}
+{"data_hora": "2026-11-26T00:10:36", "funcao": "listar_produtos_parecidos", "chamador": "rota", "identificadores": ["p12"], "quantidade": 2, "retornados": ["p10", "p11"], "sucesso": true, "erro": null}
+{"data_hora": "2026-11-26T00:10:37", "funcao": "buscar_produto", "chamador": "rota", "identificadores": ["nao-existe"], "quantidade": 0, "retornados": [], "sucesso": false, "erro": "produto_nao_encontrado"}
+{"data_hora": "2026-11-26T00:10:47", "funcao": "buscar_produto", "chamador": "rota", "identificadores": ["p01"], "quantidade": 1, "retornados": ["p01"], "sucesso": true, "erro": null}
+{"data_hora": "2026-11-26T00:10:47", "funcao": "listar_produtos_parecidos", "chamador": "rota", "identificadores": ["p01"], "quantidade": 3, "retornados": ["p02", "p03", "p04"], "sucesso": true, "erro": null}
