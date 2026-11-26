@@ -173,4 +173,42 @@ Invoke-RestMethod -Uri "http://127.0.0.1:3000/api/v1/recomendacoes" -Method Post
 
 ---
 
+## 📝 Registro de chamadas (log)
+
+A rota `POST /api/v1/recomendacoes` não lê o `catalogo.json` diretamente: ela usa só as funções de `acesso_dados.py` (`buscar_produto` e `listar_produtos_parecidos`), passando `chamador="rota"`. Cada chamada dessas funções acrescenta uma linha em `log_dados.jsonl` (na raiz do repo, fora do git).
+
+### Como conferir
+
+Terminal 1 (deixe aberto):
+
+```powershell
+just treino
+just serve
+```
+
+Terminal 2:
+
+```powershell
+just curl-exemplo       # p01: produto normal → p03 e p04
+just curl-complemento   # p12: sem mesma técnica → completa com a mesma região (p10 e p11)
+just curl-inexistente   # id que não existe → HTTP 404
+Get-Content log_dados.jsonl -Encoding utf8 -Tail 5
+```
+
+Sem o `just`, use `uv run python treino.py`, `uv run bentoml serve service:Recomendador` e os comandos `Invoke-RestMethod` da seção de casos de teste.
+
+Esperado no log (todas com `"chamador": "rota"`):
+
+| Chamada | Linhas | Resultado |
+| :--- | :--- | :--- |
+| p01 | `buscar_produto` + `listar_produtos_parecidos` | `retornados: ["p03", "p04"]` |
+| p12 | `buscar_produto` + `listar_produtos_parecidos` | `retornados: ["p10", "p11"]` |
+| nao-existe | só `buscar_produto` (a rota para no 404) | `sucesso: false`, `erro: "produto_nao_encontrado"` |
+
+### Mudando um dado
+
+Como as funções leem o catálogo a cada chamada, mudar o `estoque` ou a `tecnica` no `dados/catalogo.json` já muda a resposta, sem reiniciar o serviço. Exemplo: com o estoque do `p02` trocado de `0` para `3`, `just curl-exemplo` passa a devolver `p02`, `p03` e `p04`. Os scores (popularidade e co-ocorrência) vêm do modelo, então, para atualizar os scores, rode `just treino` de novo.
+
+---
+
 Baseado em [lgallindo/recomendador-bentoml](https://github.com/lgallindo/recomendador-bentoml)

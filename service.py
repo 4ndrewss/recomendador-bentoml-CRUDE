@@ -52,7 +52,7 @@ class Recomendador:
                 "recomendacoes": [],
             }
 
-        atual = buscar_produto(produto_id)
+        atual = buscar_produto(produto_id, chamador="rota")
         if atual is None:
             ctx.response.status_code = 404
             return {
@@ -66,7 +66,9 @@ class Recomendador:
         cooc_pagina = self.artefato["cooc"].get(produto_id, {})
 
         candidatos = []
-        for p in listar_produtos_parecidos(produto_id, incluir_mesma_regiao=True):
+        for p in listar_produtos_parecidos(
+            produto_id, incluir_mesma_regiao=True, chamador="rota"
+        ):
             pid = p["id"]
             if p["tecnica"] == atual["tecnica"]:
                 motivo = "mesma_tecnica"
