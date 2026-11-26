@@ -209,6 +209,24 @@ Esperado no log (todas com `"chamador": "rota"`):
 
 Como as funções leem o catálogo a cada chamada, mudar o `estoque` ou a `tecnica` no `dados/catalogo.json` já muda a resposta, sem reiniciar o serviço. Exemplo: com o estoque do `p02` trocado de `0` para `3`, `just curl-exemplo` passa a devolver `p02`, `p03` e `p04`. Os scores (popularidade e co-ocorrência) vêm do modelo, então, para atualizar os scores, rode `just treino` de novo.
 
+### Resumo do registro e análise
+
+Para resumir o `log_dados.jsonl` (chamadas por função, erros com motivo e produtos mais/menos/nunca consultados considerando `identificadores` e `retornados`), execute na raiz do repositório:
+
+```powershell
+just resumo
+# ou, sem o just:
+uv run python resumo_log.py
+```
+
+O script trata de forma segura os casos em que `log_dados.jsonl` ainda não existe ou está vazio. A saída gerada com as 3 chamadas oficiais está salva em [evidencias/08-resumo-card05.txt](evidencias/08-resumo-card05.txt).
+
+**Respostas com base no resumo das 3 chamadas oficiais:**
+
+- **(a) Qual dado mais usa?** Nas 3 chamadas oficiais (5 registros no log), a função mais acionada é `buscar_produto` (3 chamadas, contra 2 de `listar_produtos_parecidos`), pois toda requisição valida primeiro se o produto existe antes de buscar semelhantes. Entre os produtos do catálogo, os mais consultados são `p01` (*Jarro de barro Tracunhaém*) e `p12` (*Escultura em madeira*), presentes em 2 chamadas cada (tanto na busca inicial quanto na busca de parecidos), seguidos por `p03`, `p04`, `p10` e `p11` (1 chamada cada, como retornados). Assim, os dados mais utilizados pertencem às técnicas `ceramica`, `madeira` e `xilogravura`, das regiões de Tracunhaém e Bezerros.
+- **(b) Algum nunca usado e o que isso sugere?** Sim: 6 dos 12 produtos do catálogo nunca foram usados (`p02`, `p05`, `p06`, `p07`, `p08` e `p09`). O `p02` (*Prato de barro esmaltado*) ficou de fora por estar com `estoque: 0`, mostrando que a trava do RF-05 impede a recomendação de itens indisponíveis e, em produção, sinaliza reposição de estoque. Já `p05` a `p09` (técnicas `renda` e `cestaria`, de Pesqueira e Agreste Pernambucano) não apareceram porque as 3 chamadas oficiais não exercitaram essas categorias, sugerindo ampliar a cobertura de testes ou revisar a visibilidade desses segmentos na vitrine.
+- **(c) Houve erro e por quê?** Sim, houve 1 erro registrado (`sucesso: false`) na função `buscar_produto`, com o motivo `produto_nao_encontrado`. Ele ocorreu na 3ª chamada oficial, que consultou o identificador inexistente `nao-existe` (fora do catálogo). Como o produto não foi encontrado, a rota interrompeu o fluxo com HTTP 404 e não chegou a acionar `listar_produtos_parecidos`.
+
 ---
 
 Baseado em [lgallindo/recomendador-bentoml](https://github.com/lgallindo/recomendador-bentoml)
