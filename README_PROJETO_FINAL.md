@@ -1,7 +1,5 @@
 # 🏺 Origem — Projeto Final (Grupo CRUDE)
 
-> **Rascunho.** Os trechos marcados com `TODO` ainda precisam ser preenchidos pelo grupo.
-
 Serviço de recomendação do marketplace **Origem**, feito com BentoML. A partir do produto que o cliente está vendo, a rota `POST /api/v1/recomendacoes` sugere outros produtos **da mesma técnica** ou, se não houver, **da mesma região**, e nunca sugere produto sem estoque.
 
 Neste projeto final, todo acesso aos dados passa por funções próprias ([`acesso_dados.py`](acesso_dados.py)) e cada chamada fica anotada num registro ([`log_dados.jsonl`](#4-como-gerar-o-registro-com-3-chamadas-repetíveis)).
@@ -18,7 +16,6 @@ Neste projeto final, todo acesso aos dados passa por funções próprias ([`aces
 6. [Respostas (a), (b) e (c)](#6-respostas-a-b-e-c)
 7. [Experimento: mudei um dado, a resposta mudou](#7-experimento-mudei-um-dado-a-resposta-mudou)
 8. [Declaração de uso de IA generativa](#8-declaração-de-uso-de-ia-generativa)
-9. [Conferências finais](#9-conferências-finais)
 
 ---
 
@@ -41,6 +38,7 @@ cd recomendador-bentoml-CRUDE
 just treino        # ou: uv run python treino.py
 just serve         # ou: uv run bentoml serve service:Recomendador
 ```
+> Se o Windows bloquear o `bentoml` (erro de "Controle de Aplicativo"), use: `uv run python -m bentoml serve service:Recomendador`
 
 O serviço fica em http://127.0.0.1:3000 (com Swagger na mesma URL). Deixe esse terminal aberto e use **outro terminal** para os testes.
 
@@ -59,6 +57,8 @@ Os dados ficam em [`dados/catalogo.json`](dados/catalogo.json), com duas listas:
 | `artesao_id` | produto | texto | Identificador do artesão (ex.: `a02`) |
 | `nome_artesao` | produto | texto | Nome do artesão (**fictício**) |
 | `cestas` | raiz | lista de listas | Ids comprados juntos; geram a co-ocorrência no treino |
+
+**Casos difíceis incluídos de propósito:** o `p12` é a única peça de madeira (não tem semelhante da mesma técnica), o `p02` está com `estoque: 0` e o id `nao-existe` não está no catálogo.
 
 ## 3. Funções de acesso
 
@@ -103,25 +103,23 @@ Linhas esperadas no fim do `log_dados.jsonl` (o horário muda):
 2. A 4ª linha mostra que, para `p12`, a rota usou produtos da mesma região (`p10`, `p11`).
 3. A 5ª linha mostra que a rota procurou `nao-existe` no catálogo, não achou e parou ali (devolveu 404).
 
-O `log_dados.jsonl` não vai para o git. Uma cópia gerada pelo grupo está em [evidencias/07-log-card04.txt](evidencias/07-log-card04.txt).
+O `log_dados.jsonl` não vai para o git. Uma cópia gerada pelo grupo está em [evidencias/07-log-card04.txt](evidencias/07-log-card04.txt): as 5 primeiras linhas são as 3 chamadas acima, e as 2 últimas vêm do experimento da seção 7 (estoque do `p02` trocado de 0 para 3, o que fez o `p02` aparecer nos retornados).
 
 ## 5. Como ver o resumo
 
-> `TODO (card 05)`: comando para gerar o resumo do registro e um exemplo da saída.
+Já existe um exemplo de saída do nosso resumo aqui: [`08-resumo-card05.txt`](evidencias/08-resumo-card05.txt).
+
+Para gerar o seu, faça antes as 3 chamadas da [seção 4](#4-como-gerar-o-registro-com-3-chamadas-repetíveis) e depois rode:
 
 ```powershell
-# TODO: ex.: uv run python resumo.py
+just resumo          # ou: uv run python resumo_log.py
 ```
 
 ## 6. Respostas (a), (b) e (c)
 
-> `TODO (card 05)`: copiar as perguntas do enunciado e responder com base no resumo.
-
-**(a)** TODO
-
-**(b)** TODO
-
-**(c)** TODO
+- **(a) Qual dado mais usa?** Nas 3 chamadas oficiais, a função mais acionada é `buscar_produto`, pois toda requisição valida primeiro se o produto existe antes de buscar semelhantes. Entre os produtos do catálogo, os mais consultados são `p01` e `p12`, presentes em 2 chamadas cada, seguidos por `p03`, `p04`, `p10` e `p11`. Assim, os dados mais utilizados pertencem às técnicas `ceramica`, `madeira` e `xilogravura`, das regiões de Tracunhaém e Bezerros.
+- **(b) Algum nunca usado e o que isso sugere?** Sim: 6 dos 12 produtos (`p02`, `p05`, `p06`, `p07`, `p08` e `p09`) não apareceram nas 3 chamadas. O `p02` não aparece por estar com `estoque: 0` (regra RF-05). Os de renda e cestaria (`p05` a `p09`) não aparecem porque as 3 chamadas não pediram essas técnicas, ou seja, "nunca usado" aqui quer dizer "ainda não testado".
+- **(c) Houve erro e por quê?** Sim, houve 1 erro registrado na função `buscar_produto`, com o motivo `produto_nao_encontrado`. Ele ocorreu na 3ª chamada oficial, que consultou o identificador inexistente `nao-existe`. Como o produto não foi encontrado, a rota interrompeu o fluxo com HTTP 404 e não chegou a acionar `listar_produtos_parecidos`.
 
 ## 7. Experimento: mudei um dado, a resposta mudou
 
@@ -137,22 +135,9 @@ O `p02` (Prato de barro esmaltado, cerâmica) começa com `estoque: 0` e por iss
 
 ## 8. Declaração de uso de IA generativa
 
-> `TODO`: cada membro confere e completa a sua parte.
+O grupo usou duas ferramentas de IA generativa:
 
-| Membro | Ferramenta | Para quê |
-| :--- | :--- | :--- |
-| Gustavo Veloso | Claude Code (Anthropic), no VS Code | Card 04: passar `chamador="rota"` na rota, rodar as 3 chamadas, fazer o experimento de estoque e documentar no README; rascunho deste README |
-| Andrews Queiroz | TODO | TODO |
-| Arthur Marques | TODO | TODO |
-| Caio Gilles | TODO | TODO |
-| Enzo Barbosa | TODO | TODO |
-| Pedro Henrique | TODO | TODO |
+- **Claude** (Anthropic): divisão do trabalho em cards do Trello, conferência dos pull requests e do README, e orientação sobre testes e evidências.
+- **Claude Code** (Anthropic): passar `chamador="rota"` na rota, rodar as 3 chamadas, fazer o experimento de estoque, documentar no README e escrever o rascunho deste README.
 
 Todo o conteúdo gerado com IA foi revisado e testado pelo grupo antes de entrar no repositório.
-
-## 9. Conferências finais
-
-- [x] **Sem pessoas reais:** os nomes de artesãos no catálogo são inventados, e não há dados de clientes.
-- [x] **Sem chaves ou senhas:** o repositório não tem tokens, senhas ou arquivos `.env`.
-- [x] **Tudo no repositório:** código, dados, dicionário, evidências e este README. Só ficam de fora o `.venv/`, o store do BentoML e o `log_dados.jsonl`, que são gerados ao rodar.
-- [ ] **Teste final:** alguém de fora do grupo segue só este README, roda o serviço, faz as 3 chamadas, abre o registro e aponta as 3 linhas da seção 4. `TODO: quem testou e quando`.
