@@ -1,0 +1,30 @@
+=== Resumo do registro (log_dados.jsonl) ===
+Total de chamadas: 5 (4 com sucesso, 1 com erro)
+
+Chamadas por função:
+  - buscar_produto: 3
+  - listar_produtos_parecidos: 2
+
+Erros: 1
+  - produto_nao_encontrado: 1
+
+Produtos consultados (6 de 12 do catálogo, contando pedidos e retornados):
+  - p01 (Jarro de barro Tracunhaém): 2 chamada(s)
+  - p12 (Escultura em madeira): 2 chamada(s)
+  - p03 (Boneca de barro): 1 chamada(s)
+  - p04 (Moringa de barro): 1 chamada(s)
+  - p10 (Xilogravura de cordel): 1 chamada(s)
+  - p11 (Quadro de xilogravura colorida): 1 chamada(s)
+  Mais consultado(s): p01, p12 (2 chamada(s))
+  Menos consultado(s) entre os usados: p03, p04, p10, p11 (1 chamada(s))
+
+Produtos nunca usados (6 de 12):
+  - p02 (Prato de barro esmaltado) [estoque: 0]
+  - p05 (Toalha de renda renascença)
+  - p06 (Caminho de mesa de renda)
+  - p07 (Cesto de palha trançada)
+  - p08 (Bolsa de palha)
+  - p09 (Sousplat de palha)
+
+IDs fora do catálogo consultados:
+  - nao-existe: 1 chamada(s)

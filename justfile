@@ -111,6 +111,14 @@ curl-inexistente:
       -d '{"produto_id":"nao-existe","limite":3}'
 
 # ---------------------------------------------------------------------------
+# Resumo do registro (log_dados.jsonl)
+# ---------------------------------------------------------------------------
+
+resumo:
+    # Lê log_dados.jsonl e imprime funções, erros e produtos mais/menos/nunca consultados
+    uv run python resumo_log.py
+
+# ---------------------------------------------------------------------------
 # Material de aula
 # ---------------------------------------------------------------------------
 
